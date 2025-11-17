@@ -1,7 +1,7 @@
 import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
-// --- IMPORT YOUR 7 PAGE COMPONENTS ---
+// --- IMPORT 7 PAGE COMPONENTS ---
 import AppointmentBookingPage from './pages/AppointmentBooking.jsx';
 import DashboardPage from './pages/DashboardPage.jsx';
 import ComprehensivePage from './pages/ComprehensivePage.jsx';
@@ -19,7 +19,6 @@ export default function App() {
                 <Route path="/" element={<AppointmentBookingPage />} />
                 <Route path="/dashboard" element={<DashboardPage />} />
 
-                {/* --- ADD YOUR 6 NEW STATIC ROUTES --- */}
                 {/* These slugs match the ones in clinicData.js */}
                 <Route path="/service/comprehensive-eye-exams" element={<ComprehensivePage />} />
                 <Route path="/service/lasik-consultation" element={<LasikPage />} />

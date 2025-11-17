@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
+import { API_BASE_URL } from '../../config/api';
+
 
 // This component displays a modal for user login.
 export default function LoginModal({ onClose, onSwitchToRegister }) {
@@ -20,7 +22,7 @@ export default function LoginModal({ onClose, onSwitchToRegister }) {
             password: password
         };
 
-        const apiUrl = 'http://localhost:8080/api/auth/login';
+        const apiUrl = `${API_BASE_URL}/api/auth/login`;
 
         try {
             const response = await fetch(apiUrl, {

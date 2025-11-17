@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { API_BASE_URL } from '../../config/api';
+
 
 export default function RegisterModal({ onClose, onSwitchToLogin }) {
     const { t } = useTranslation();
@@ -29,7 +31,7 @@ export default function RegisterModal({ onClose, onSwitchToLogin }) {
             return;
         }
 
-        const apiUrl = 'http://localhost:8080/api/auth/register';
+        const apiUrl = `${API_BASE_URL}/api/auth/register`;
 
         try {
             const response = await fetch(apiUrl, {

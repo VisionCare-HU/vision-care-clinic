@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import { API_BASE_URL } from '../config/api';
 
 import Header from '../components/common/Header';
 import Footer from '../components/common/Footer';
@@ -33,10 +34,10 @@ export default function DashboardPage() {
         const fetchDashboardData = async () => {
             try {
                 const [profileResponse, appointmentsResponse] = await Promise.all([
-                    fetch('http://localhost:8080/api/auth/me', {
+                    fetch(`${API_BASE_URL}/api/auth/me`, {
                         headers: { 'Authorization': `Bearer ${token}` }
                     }),
-                    fetch('http://localhost:8080/api/appointments/me', {
+                    fetch(`${API_BASE_URL}/api/appointments/me`, {
                         headers: { 'Authorization': `Bearer ${token}` }
                     })
                 ]);

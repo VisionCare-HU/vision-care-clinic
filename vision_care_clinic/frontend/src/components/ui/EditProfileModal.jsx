@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { API_BASE_URL } from '../../config/api';
+
 
 export default function EditProfileModal({ patient, onSave, onClose }) {
     const { t } = useTranslation();
@@ -25,7 +27,7 @@ export default function EditProfileModal({ patient, onSave, onClose }) {
         e.preventDefault();
         try {
             const token = localStorage.getItem('userToken');
-            const response = await fetch('http://localhost:8080/api/auth/update-profile', {
+            const response = await fetch(`${API_BASE_URL}/api/auth/update-profile`, {
                 method: 'PUT',
                 headers: {
                     'Authorization': `Bearer ${token}`,

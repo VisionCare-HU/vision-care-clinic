@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { services } from '../../api/clinicData';
+import { API_BASE_URL } from '../../config/api';
 
 export default function AppointmentForm() {
     const { t } = useTranslation();
@@ -12,8 +13,8 @@ export default function AppointmentForm() {
         time: '',
         service: '',
         notes: '',
-        bringingPet: false, 
-        petDetails: ''      
+        bringingPet: false,
+        petDetails: ''
     };
 
     const [formData, setFormData] = useState(initialFormState);
@@ -22,9 +23,9 @@ export default function AppointmentForm() {
 
     const handleInputChange = (e) => {
         const { name, value, type, checked } = e.target;
-        setFormData(prev => ({ 
-            ...prev, 
-            [name]: type === 'checkbox' ? checked : value 
+        setFormData(prev => ({
+            ...prev,
+            [name]: type === 'checkbox' ? checked : value
         }));
     };
 
@@ -39,7 +40,7 @@ export default function AppointmentForm() {
             return;
         }
 
-        const apiUrl = 'http://localhost:8080/api/appointments/book';
+        const apiUrl = `${API_BASE_URL}/api/appointments/book`;
 
         try {
             const response = await fetch(apiUrl, {
@@ -59,7 +60,7 @@ export default function AppointmentForm() {
             console.log("Appointment saved and linked to user:", result);
 
             setSubmitted(true);
-            setFormData(initialFormState); 
+            setFormData(initialFormState);
             setTimeout(() => setSubmitted(false), 5000);
 
         } catch (error) {
@@ -95,18 +96,18 @@ export default function AppointmentForm() {
                         <div className="grid md:grid-cols-2 gap-6">
                             <div>
                                 <label htmlFor="firstName" className="block text-sm font-medium text-gray-700 mb-1">{t('form_label_firstname')}</label>
-                                <input type="text" name="firstName" id="firstName" value={formData.firstName} onChange={handleInputChange} required className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500"/>
+                                <input type="text" name="firstName" id="firstName" value={formData.firstName} onChange={handleInputChange} required className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500" />
                             </div>
                             <div>
                                 <label htmlFor="lastName" className="block text-sm font-medium text-gray-700 mb-1">{t('form_label_lastname')}</label>
-                                <input type="text" name="lastName" id="lastName" value={formData.lastName} onChange={handleInputChange} required className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500"/>
+                                <input type="text" name="lastName" id="lastName" value={formData.lastName} onChange={handleInputChange} required className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500" />
                             </div>
                         </div>
 
                         <div className="grid md:grid-cols-2 gap-6">
                             <div>
                                 <label htmlFor="date" className="block text-sm font-medium text-gray-700 mb-1">{t('form_label_date')}</label>
-                                <input type="date" name="date" id="date" value={formData.date} onChange={handleInputChange} min={today} required className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500"/>
+                                <input type="date" name="date" id="date" value={formData.date} onChange={handleInputChange} min={today} required className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500" />
                             </div>
                             <div>
                                 <label htmlFor="time" className="block text-sm font-medium text-gray-700 mb-1">{t('form_label_time')}</label>
