@@ -27,7 +27,7 @@ export default function EditProfileModal({ patient, onSave, onClose }) {
         e.preventDefault();
         try {
             const token = localStorage.getItem('userToken');
-            const response = await fetch(`${API_BASE_URL}/api/auth/update-profile`, {
+            const response = await fetch(`${API_BASE_URL}/api/auth/profile`, {
                 method: 'PUT',
                 headers: {
                     'Authorization': `Bearer ${token}`,
