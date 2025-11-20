@@ -1,16 +1,55 @@
 import React, { useState } from 'react';
+import { API_BASE_URL } from '../config/api';
 
-// This component now handles both Login and Registration.
 export default function LoginModal({ onClose, onLoginSuccess }) {
-    // This state tracks whether we are in "login" or "register" mode.
     const [isRegistering, setIsRegistering] = useState(false);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState('');
 
-    const handleFormSubmit = (e) => {
+    const handleFormSubmit = async (e) => {
         e.preventDefault();
-        // In a real app, you would check if isRegistering is true
-        // and send data to a '/api/auth/register' endpoint.
-        // For now, any successful submission will lead to the dashboard.
-        onLoginSuccess();
+        setLoading(true);
+        setError('');
+
+        const formData = new FormData(e.target);
+        const data = {
+            email: formData.get('email'),
+            password: formData.get('password')
+        };
+
+        if (isRegistering) {
+            // Add registration-specific fields
+            data.firstName = formData.get('firstName');
+            data.lastName = formData.get('lastName');
+            data.phone = formData.get('phone');
+        }
+
+        try {
+            const endpoint = isRegistering ? '/api/auth/register' : '/api/auth/login';
+            const response = await fetch(`${API_BASE_URL}${endpoint}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(data)
+            });
+
+            if (response.ok) {
+                const result = await response.json();
+                // Store token if your backend returns one
+                if (result.token) {
+                    localStorage.setItem('token', result.token);
+                }
+                onLoginSuccess();
+            } else {
+                const errorData = await response.json();
+                setError(errorData.message || `Registration failed: ${response.status}`);
+            }
+        } catch (err) {
+            setError('Network error. Please try again.');
+        } finally {
+            setLoading(false);
+        }
     };
 
     return (
@@ -22,6 +61,13 @@ export default function LoginModal({ onClose, onLoginSuccess }) {
                     {isRegistering ? 'Create Your Account' : 'Patient Portal Login'}
                 </h2>
 
+                {/* Error Message */}
+                {error && (
+                    <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+                        {error}
+                    </div>
+                )}
+
                 <form onSubmit={handleFormSubmit} className="space-y-4">
                     {/* These fields only show when isRegistering is true */}
                     {isRegistering && (
@@ -29,16 +75,16 @@ export default function LoginModal({ onClose, onLoginSuccess }) {
                             <div className="grid grid-cols-2 gap-4">
                                 <div>
                                     <label htmlFor="firstName" className="block text-sm font-medium text-gray-700 mb-1">First Name</label>
-                                    <input id="firstName" type="text" required className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500"/>
+                                    <input name="firstName" id="firstName" type="text" required className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500"/>
                                 </div>
                                 <div>
                                     <label htmlFor="lastName" className="block text-sm font-medium text-gray-700 mb-1">Last Name</label>
-                                    <input id="lastName" type="text" required className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500"/>
+                                    <input name="lastName" id="lastName" type="text" required className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500"/>
                                 </div>
                             </div>
                             <div>
                                 <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-1">Phone Number</label>
-                                <input id="phone" type="tel" required className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500"/>
+                                <input name="phone" id="phone" type="tel" required className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500"/>
                             </div>
                         </>
                     )}
@@ -46,15 +92,19 @@ export default function LoginModal({ onClose, onLoginSuccess }) {
                     {/* These fields are for both login and registration */}
                     <div>
                         <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">Email Address</label>
-                        <input id="email" type="email" required className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500"/>
+                        <input name="email" id="email" type="email" required className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500"/>
                     </div>
                     <div>
                         <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1">Password</label>
-                        <input id="password" type="password" required className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500"/>
+                        <input name="password" id="password" type="password" required className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500"/>
                     </div>
 
-                    <button type="submit" className="w-full bg-indigo-600 text-white font-bold py-3 rounded-lg hover:bg-indigo-700 transition-all">
-                        {isRegistering ? 'Register' : 'Sign In'}
+                    <button 
+                        type="submit" 
+                        disabled={loading}
+                        className="w-full bg-indigo-600 text-white font-bold py-3 rounded-lg hover:bg-indigo-700 transition-all disabled:opacity-50"
+                    >
+                        {loading ? 'Processing...' : (isRegistering ? 'Register' : 'Sign In')}
                     </button>
 
                     <p className="text-center text-sm text-gray-600 pt-2">
@@ -74,5 +124,4 @@ export default function LoginModal({ onClose, onLoginSuccess }) {
             </div>
         </div>
     );
-};
-
+}
