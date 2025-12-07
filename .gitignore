@@ -1,0 +1,43 @@
+# Dependencies
+node_modules/
+package-lock.json
+
+# Build outputs
+target/
+dist/
+build/
+*.class
+*.jar
+*.war
+
+# IDE
+.idea/
+.vscode/
+*.iml
+*.ipr
+*.iws
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+
+# Environment variables
+.env
+.env.local
+
+# Vite cache
+.vite/
+
+# Maven
+.mvn/wrapper/maven-wrapper.jar
+
+# Spring Boot
+HELP.md
+
+# Docker volumes
+postgres_data/
+
